@@ -1,0 +1,16 @@
+<template name="team">
+  <li>
+    {{#if isEditingTeam}}
+      <form action="" class="form-edit">
+        <input type="text" name="name" value="{{name}}">
+        <button type="submit">Submit</button>
+        <a href="#" class="cancel">Cancel</a>
+      </form>
+    {{else}}
+      {{name}}
+      <a href="#" class="edit">edit</a>
+      <a href="#" class="remove">(x)</a>
+    {{/if}}
+  </li>
+
+</template>
