@@ -23,29 +23,19 @@ Template.games.events({
   },
   'submit form.form-create': function(e, tmpl) {
     e.preventDefault();
-    var team1 = {
-      _id:tmpl.$('select[name="teamOne"]').val(),
-      name:tmpl.$('select[name="teamOne"] option:selected').text(),
-      score: 0
-    };
+    var teamOneId = tmpl.$('select[name="teamOne"]').val();
+    var teamTwoId = tmpl.$('select[name="teamTwo"]').val();
 
-    var team2 = {
-      _id:tmpl.$('select[name="teamTwo"]').val(),
-      name:tmpl.$('select[name="teamTwo"] option:selected').text(),
-      score: 0
-    };
-
-    var game = {
-      completed: false,
-      ownerId: Meteor.userId(),
-      createdAt: new Date(),
-      teams: [team1, team2]
-    };
-
-    var gameId = Games.insert(game);
-    Teams.update({_id:team1._id}, {$addToSet:{gameIds:gameId}});
-    Teams.update({_id:team2._id}, {$addToSet:{gameIds: gameId}});
-
+    Meteor.call("gamesInsert", teamOneId, teamTwoId, function(error, result){
+      if(error){
+        alert(error.reason);
+        Session.set('isCreatingGame', true);
+        Tracker.afterFlush(function(){
+           tmpl.$('select[name="teamOne"]').val(teamOneId);
+           tmpl.$('select[name="teamTwo"]').val(teamTwoId);
+        });
+      }
+    });
     Session.set('isCreatingGame', false);
 
   }

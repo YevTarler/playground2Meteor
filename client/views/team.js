@@ -16,20 +16,14 @@ Template.team.events({
     var self = this;
     var newName = tpl.$('input[name="name"]').val();
     if (newName.length) {
-      Teams.update(self._id, {$set:{name:newName}}, function(err) {
-        if (!err) {
-          // since we denormelize we need to loook in games collection and change the name of the team
-          var games = Games.find({_id: {$in: self.gameIds}});
-
-          if (games.count()) {
-            _(games.fetch()).each(function(game){
-              var team = _(game.teams).findWhere({_id: self._id});
-              if (team !== null) {
-                team.name = newName;
-                Games.update({_id:game._id}, {$set: {teams: game.teams}});
-              }
-            });
-          }
+      Meteor.call("teamUpdate", this._id, newName, function(error, result){
+        if(error){
+          alert(error.reason);
+          Session.set("editedTeamId", self._id);
+          Tracker.afterFlush(function(){
+             tpl.$('input[name="name"]').val(newName);
+             tpl.$('input[name="name"]').focus();
+          });
         }
       });
       Session.set('editedTeamId', null);
