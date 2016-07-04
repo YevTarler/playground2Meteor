@@ -34,7 +34,6 @@ Meteor.methods({
        };
        var game = {
          ownerId: Meteor.userId(),
-         createdAt: new Date(),
          completed: false,
          teams: [teamOneData, teamTwoData]
        };

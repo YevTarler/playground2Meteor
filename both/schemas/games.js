@@ -1,16 +1,24 @@
-Teams.attachSchema(new SimpleSchema({
+var gameTeamSchema = new SimpleSchema({
+  _id: {
+    type: String
+  },
   name: {
-    type: String,
-    index:true,
-    unique: true,
-    max: 30,
+    type: String
+  },
+  score: {
+    type: Number
+  }
+});
+
+Games.attachSchema(new SimpleSchema({
+  completed: {
+    type: Boolean
   },
   ownerId: {
-    type: String,
+    type: String
   },
-  gameIds: {
-    type: [String],
-    optional: true,
+  teams: {
+    type: [gameTeamSchema]
   },
 
   createdAt: {
@@ -35,5 +43,5 @@ Teams.attachSchema(new SimpleSchema({
     },
     denyInsert: true,
     optional: true
-  }
+  },
 }));
